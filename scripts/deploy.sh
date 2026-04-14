@@ -43,7 +43,7 @@ cd ../frontend
 echo "📝 Setting API URL for production..."
 echo "NEXT_PUBLIC_API_URL=$API_URL" > .env.production
 
-npm install
+npm ci --include=optional
 npm run build
 aws s3 sync ./out "s3://$FRONTEND_BUCKET/" --delete
 cd ..
