@@ -10,6 +10,13 @@ terraform {
       version = "1.3.0"
     }
   }
+
+  backend "s3" {
+    bucket       = "kodegaapp-twin-terraform-state"
+    key          = "twin-app.tfstate"
+    use_lockfile = true
+    region       = "us-east-1"
+  }
 }
 
 

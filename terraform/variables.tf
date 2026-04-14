@@ -51,3 +51,8 @@ variable "root_domain" {
   description = "Apex domain name, e.g. mydomain.com"
   default     = ""
 }
+
+variable "github_repository" {
+  type        = string
+  description = "GitHub repository in format 'owner/repo'"
+}
