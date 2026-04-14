@@ -42,8 +42,42 @@ jobs:
           cache: "npm"
           cache-dependency-path: frontend/package-lock.json
 
-      - name: check the dependencies
+      - name: Run Deployment Script
         run: |
-          python --version
-          node --version
-          terraform --version
+          # Set environment variables for the script
+          export AWS_ACCOUNT_ID=${{ secrets.AWS_ACCOUNT_ID }}
+          export DEFAULT_AWS_REGION=${{ secrets.DEFAULT_AWS_REGION }}
+
+          # Make script executable and run it
+          chmod +x scripts/deploy.sh
+          ./scripts/deploy.sh ${{ github.event.inputs.environment || 'dev' }}
+        env:
+          AWS_ROLE_ARN: ${{ secrets.AWS_ROLE_ARN }}
+
+      - name: Get Deployment URLs
+        id: deploy_outputs
+        working-directory: ./terraform
+        run: |
+          terraform workspace select ${{ github.event.inputs.environment || 'dev' }}
+          echo "cloudfront_url=$(terraform output -raw cloudfront_url)" >> $GITHUB_OUTPUT
+          echo "api_url=$(terraform output -raw api_gateway_url)" >> $GITHUB_OUTPUT
+          echo "frontend_bucket=$(terraform output -raw s3_frontend_bucket)" >> $GITHUB_OUTPUT
+
+      - name: Invalidate CloudFront
+        run: |
+          DISTRIBUTION_ID=$(aws cloudfront list-distributions \
+            --query "DistributionList.Items[?Origins.Items[?DomainName=='${{ steps.deploy_outputs.outputs.frontend_bucket }}.s3-website-${{ secrets.DEFAULT_AWS_REGION }}.amazonaws.com']].Id | [0]" \
+            --output text)
+
+          if [ "$DISTRIBUTION_ID" != "None" ] && [ -n "$DISTRIBUTION_ID" ]; then
+            aws cloudfront create-invalidation \
+              --distribution-id $DISTRIBUTION_ID \
+              --paths "/*"
+          fi
+
+      - name: Deployment Summary
+        run: |
+          echo "✅ Deployment Complete!"
+          echo "🌐 CloudFront URL: ${{ steps.deploy_outputs.outputs.cloudfront_url }}"
+          echo "📡 API Gateway: ${{ steps.deploy_outputs.outputs.api_url }}"
+          echo "🪣 Frontend Bucket: ${{ steps.deploy_outputs.outputs.frontend_bucket }}"
