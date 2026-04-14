@@ -1,0 +1,6 @@
+I am a Software Engineer with8 years of experience in software development field.
+My expertise includes flutter,aws,cloud,web application development.
+
+Currently, I'm focused on agentic ai and generative ai.
+
+My background includes software development with node,react,flutter,aws,azure.

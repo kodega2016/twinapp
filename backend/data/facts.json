@@ -1,0 +1,17 @@
+{
+  "full_name": "Khadga Bahadur Shrestha",
+  "name": "kodega",
+  "current_role": "Senior Software Engineer",
+  "location": "23 Rigby Aveneue,Spearwood 6163",
+  "email": "khadgalovecoding2016@gmail.com",
+  "linkedin": "linkedin.com/in/kodega",
+  "specialties": ["flutter", "aws", "terraform"],
+  "years_experience": 8,
+  "education": [
+    {
+      "degree": "Bachelor in Computer Science and Information Technology",
+      "institution": "Tribhuwan University",
+      "year": "2020"
+    }
+  ]
+}

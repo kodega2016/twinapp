@@ -1,0 +1,13 @@
+backend/.env
+*.tfstate
+*.tfstate.*
+.terraform/
+.terraform.lock.hcl
+terraform.tfstate.d
+*.tfvars
+memory/
+.env
+.idea
+backend/.python-version
+backend/uv.lock
+backend/__pycache__
