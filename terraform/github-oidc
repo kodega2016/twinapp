@@ -1,3 +1,10 @@
+variable "github_repository" {
+  type        = string
+  description = "GitHub repository in format 'owner/repo'"
+}
+
+
+
 resource "aws_iam_openid_connect_provider" "github" {
   url = "https://token.actions.githubusercontent.com"
 
